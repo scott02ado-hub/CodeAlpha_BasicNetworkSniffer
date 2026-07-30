@@ -8,6 +8,7 @@ Project: CodeAlpha Basic Network Sniffer
 """
 
 from scapy.all import sniff
+from scapy.error import Scapy_Exception
 
 from src.packet_analyzer import PacketAnalyzer
 from src.logger import get_logger
@@ -20,7 +21,7 @@ class NetworkSniffer:
 
     def __init__(self, interface: str):
         """
-        Initialize sniffer.
+        Initialize the network sniffer.
 
         Args:
             interface (str): Network interface name.
@@ -29,13 +30,11 @@ class NetworkSniffer:
         self.interface = interface
         self.analyzer = PacketAnalyzer()
         self.logger = get_logger()
-
         self.packet_count = 0
-
 
     def process_packet(self, packet):
         """
-        Process each captured packet.
+        Analyze and log each captured packet.
 
         Args:
             packet: Scapy packet object.
@@ -46,10 +45,8 @@ class NetworkSniffer:
         packet_info = self.analyzer.analyze(packet)
 
         self.logger.info(
-            f"Packet #{self.packet_count} | "
-            f"{packet_info}"
+            f"Packet #{self.packet_count} | {packet_info}"
         )
-
 
     def start(self):
         """
@@ -60,8 +57,25 @@ class NetworkSniffer:
             f"Starting capture on {self.interface}"
         )
 
-        sniff(
-            iface=self.interface,
-            prn=self.process_packet,
-            store=False
-        )
+        try:
+            sniff(
+                iface=self.interface,
+                prn=self.process_packet,
+                store=False
+            )
+
+        except KeyboardInterrupt:
+
+            self.logger.info(
+                "Stopping sniffer..."
+            )
+
+            self.logger.info(
+                f"Total packets captured: {self.packet_count}"
+            )
+
+        except Scapy_Exception as error:
+
+            self.logger.error(
+                f"Scapy error: {error}"
+            )
