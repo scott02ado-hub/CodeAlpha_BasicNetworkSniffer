@@ -1,5 +1,6 @@
-from src.logger import get_logger
+from src.network_sniffer import NetworkSniffer
 
-logger = get_logger()
 
-logger.info("Application started successfully!")
+sniffer = NetworkSniffer("wlan0")
+
+sniffer.start()
