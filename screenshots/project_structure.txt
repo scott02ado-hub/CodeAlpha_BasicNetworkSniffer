@@ -1,0 +1,21 @@
+.
+├── LICENSE
+├── logs
+│   └── capture.log
+├── main.py
+├── README.md
+├── report
+├── requirements.txt
+├── screenshots
+│   └── project_structure.txt
+├── src
+│   ├── display.py
+│   ├── __init__.py
+│   ├── logger.py
+│   ├── network_sniffer.py
+│   ├── packet_analyzer.py
+│   └── utils.py
+└── tests
+    └── test_analyzer.py
+
+6 directories, 13 files
