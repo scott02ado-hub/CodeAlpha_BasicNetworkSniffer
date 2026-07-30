@@ -12,6 +12,7 @@ from scapy.error import Scapy_Exception
 
 from src.packet_analyzer import PacketAnalyzer
 from src.logger import get_logger
+from src.display import PacketDisplay
 
 
 class NetworkSniffer:
@@ -30,11 +31,13 @@ class NetworkSniffer:
         self.interface = interface
         self.analyzer = PacketAnalyzer()
         self.logger = get_logger()
+        self.display = PacketDisplay()
         self.packet_count = 0
+
 
     def process_packet(self, packet):
         """
-        Analyze and log each captured packet.
+        Process each captured packet.
 
         Args:
             packet: Scapy packet object.
@@ -44,14 +47,21 @@ class NetworkSniffer:
 
         packet_info = self.analyzer.analyze(packet)
 
+        # Display packet in terminal
+        self.display.show_packet(packet_info)
+
+        # Save packet information in log file
         self.logger.info(
             f"Packet #{self.packet_count} | {packet_info}"
         )
+
 
     def start(self):
         """
         Start packet capture.
         """
+
+        self.display.show_banner()
 
         self.logger.info(
             f"Starting capture on {self.interface}"
